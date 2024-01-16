@@ -21,5 +21,14 @@
   "bugs": {
     "url": "https://github.com/naveedaheer/nodejs-contacts-management/issues"
   },
-  "homepage": "https://github.com/naveedaheer/nodejs-contacts-management#readme"
+  "homepage": "https://github.com/naveedaheer/nodejs-contacts-management#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "nodemon": "^3.0.2",
+    "pg": "^8.11.3",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.35.2"
+  }
 }
