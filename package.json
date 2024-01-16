@@ -1,0 +1,25 @@
+{
+  "name": "nodejs-contacts-management",
+  "version": "1.0.0",
+  "description": "Add/Edit/Delete/View contacts",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/naveedaheer/nodejs-contacts-management.git"
+  },
+  "keywords": [
+    "nodejs",
+    "contacts",
+    "management",
+    "apis"
+  ],
+  "author": "Naveed Aheer",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/naveedaheer/nodejs-contacts-management/issues"
+  },
+  "homepage": "https://github.com/naveedaheer/nodejs-contacts-management#readme"
+}
