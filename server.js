@@ -7,7 +7,7 @@ const contact = require("./routes/contactRoutes")
 const app = express();
 
 const corsOptions = {
-    origin: "http://localhost:8081"
+    origin: "https://contacts-management-a936dcf43aca.herokuapp.com/"
 };
 
 app.use(cors(corsOptions));
