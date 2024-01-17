@@ -3,7 +3,13 @@ module.exports = {
     USER: process.env.USER,
     PASSWORD: process.env.PASSWORD,
     DB: process.env.DB,
-    dialect: process.env.DIALECT,
+    dialect: "postgres",
+    dialectOptions: {
+        ssl: {
+            require: true,
+            rejectUnauthorized: false
+        }
+    },
     pool: {
         max: 5,
         min: 0,

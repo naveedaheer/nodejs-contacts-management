@@ -10,7 +10,7 @@ module.exports = (sequelize, Sequelize) => {
             type: Sequelize.STRING
         },
         phoneNumber: {
-            type: Sequelize.NUMBER
+            type: Sequelize.STRING(15)
         }
     });
 
