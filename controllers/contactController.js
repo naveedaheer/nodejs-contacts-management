@@ -8,7 +8,7 @@ const addContact = async (req, res) => {
 }
 
 const getAllContacts = async (req, res) => {
-    const { firstName, lastName } = req.query;
+    const { firstName, lastName, pageNumber, pageSize } = req.query;
     let whereCondition = {}
     if (firstName && lastName) {
         whereCondition = {
@@ -23,8 +23,16 @@ const getAllContacts = async (req, res) => {
             ].filter(condition => condition[Object.keys(condition)[0]] !== undefined)
         };
     }
+    else {
+        whereCondition = {}
+    }
+    const offset = (pageNumber - 1) * pageSize;
     const getContacts = await contactDb.findAll({
-        where: whereCondition
+        where: whereCondition,
+        limit: parseInt(pageSize),
+        offset: parseInt(offset),
+    }).catch((err) => {
+        console.log(err)
     })
     if (getContacts.length > 0) {
         res.status(200).send(getContacts)
@@ -47,7 +55,7 @@ const deleteContact = async (req, res) => {
 
 const getContact = async (req, res) => {
     const id = req.params.id
-    const getAllContacts = await contactDb.findOne({ where: id })
+    const getAllContacts = await contactDb.findOne({ where: { id } })
     res.status(200).send(getAllContacts)
 }
 
