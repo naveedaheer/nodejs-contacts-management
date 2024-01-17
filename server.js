@@ -14,6 +14,9 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/contact', contact)
+app.get('/',(req,res) =>{
+    res.send("App is running")
+})
 db.sequelize.sync()
     .then(() => {
         console.log("Database connected");
