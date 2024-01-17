@@ -35,9 +35,15 @@ const deleteContact = async (req, res) => {
     res.status(200).send("Deleted successfully")
 }
 
+const getAllContacts = async (req, res) => {
+    const getAllContacts = await contactDb.findAll()
+    res.status(200).send(getAllContacts)
+}
+
 module.exports = {
     addContact,
     getContact,
+    getAllContacts,
     deleteContact,
     updateContact,
 }
