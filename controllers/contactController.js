@@ -9,7 +9,8 @@ const addContact = async (req, res) => {
 
 const getAllContacts = async (req, res) => {
     const { firstName, lastName, pageNumber, pageSize } = req.query;
-    let whereCondition = {}
+    let whereCondition = {};
+
     if (firstName && lastName) {
         whereCondition = {
             firstName,
@@ -19,24 +20,42 @@ const getAllContacts = async (req, res) => {
         whereCondition = {
             [Op.or]: [
                 { firstName },
-                { lastName }
-            ].filter(condition => condition[Object.keys(condition)[0]] !== undefined)
+                { lastName },
+            ].filter(condition => condition[Object.keys(condition)[0]] !== undefined),
         };
+    } else {
+        whereCondition = {};
     }
-    else {
-        whereCondition = {}
-    }
+
     const offset = (pageNumber - 1) * pageSize;
     const data = await contactDb.findAll({
         where: whereCondition,
         limit: parseInt(pageSize),
         offset: parseInt(offset),
     }).catch((err) => {
-        console.log(err)
-    })
-    res.status(200).send(data);
-}
+        console.log(err);
+        res.status(500).send({ error: 'Internal Server Error' });
+    });
 
+    const totalContacts = await contactDb.count({
+        where: whereCondition,
+    }).catch((err) => {
+        console.log(err);
+        res.status(500).send({ error: 'Internal Server Error' });
+    });
+
+    const totalPages = Math.ceil(totalContacts / parseInt(pageSize));
+
+    res.status(200).send({
+        data,
+        pageInfo: {
+            pageSize: parseInt(pageSize),
+            currentPage: parseInt(pageNumber),
+            totalContacts,
+            totalPages,
+        },
+    });
+};
 const updateContact = async (req, res) => {
     const id = req.params.id
     const updateContact = await contactDb.update(req.body, { where: { id } })
