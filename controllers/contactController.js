@@ -59,7 +59,11 @@ const getAllContacts = async (req, res) => {
             };
         }
 
-        const data = await ContactTable.findAll(getSequelizeOptions(pageNumber, pageSize, whereCondition));
+        const data = await ContactTable.findAll({
+            ...getSequelizeOptions(pageNumber, pageSize, whereCondition),
+            order: [['updatedAt', 'DESC']], // Sorting by updatedAt in descending order
+        });
+
         const totalContacts = await ContactTable.count({ where: whereCondition });
 
         const totalPages = Math.ceil(totalContacts / parseInt(pageSize));
@@ -74,6 +78,7 @@ const getAllContacts = async (req, res) => {
         handleErrors(res, 500, 'Internal Server Error');
     }
 };
+
 
 const updateContact = async (req, res) => {
     try {
