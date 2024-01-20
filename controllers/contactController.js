@@ -1,6 +1,7 @@
 const { Op } = require('sequelize');
 const db = require('../models');
-const contactDb = db.contacts;
+
+const ContactTable = db.contacts;
 
 const handleErrors = (res, status, message) => {
     console.error(message);
@@ -28,7 +29,7 @@ const sendSuccessMessage = (res, message) => {
 
 const addContact = async (req, res) => {
     try {
-        await contactDb.create(req.body);
+        await ContactTable.create(req.body);
         sendSuccessMessage(res, 'Contact created successfully!');
     } catch (err) {
         handleErrors(res, 500, 'Internal Server Error');
@@ -58,8 +59,8 @@ const getAllContacts = async (req, res) => {
             };
         }
 
-        const data = await contactDb.findAll(getSequelizeOptions(pageNumber, pageSize, whereCondition));
-        const totalContacts = await contactDb.count({ where: whereCondition });
+        const data = await ContactTable.findAll(getSequelizeOptions(pageNumber, pageSize, whereCondition));
+        const totalContacts = await ContactTable.count({ where: whereCondition });
 
         const totalPages = Math.ceil(totalContacts / parseInt(pageSize));
 
@@ -77,7 +78,7 @@ const getAllContacts = async (req, res) => {
 const updateContact = async (req, res) => {
     try {
         const id = req.params.id;
-        await contactDb.update(req.body, { where: { id } });
+        await ContactTable.update(req.body, { where: { id } });
         sendSuccessMessage(res, 'Contact updated successfully!');
     } catch (err) {
         handleErrors(res, 500, 'Internal Server Error');
@@ -87,7 +88,7 @@ const updateContact = async (req, res) => {
 const deleteContact = async (req, res) => {
     try {
         const id = req.params.id;
-        await contactDb.destroy({ where: { id } });
+        await ContactTable.destroy({ where: { id } });
         sendSuccessMessage(res, 'Contact deleted successfully!');
     } catch (err) {
         handleErrors(res, 500, 'Internal Server Error');
@@ -97,7 +98,7 @@ const deleteContact = async (req, res) => {
 const getContact = async (req, res) => {
     try {
         const id = req.params.id;
-        const contact = await contactDb.findOne({ where: { id } });
+        const contact = await ContactTable.findOne({ where: { id } });
         sendSuccessResponse(res, contact, null);
     } catch (err) {
         handleErrors(res, 500, 'Internal Server Error');
