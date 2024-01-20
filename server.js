@@ -1,5 +1,5 @@
-
 require('dotenv').config()
+
 const express = require("express");
 const cors = require("cors");
 const db = require("./models/index");
@@ -11,12 +11,17 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
 app.use(express.json());
+
 app.use(express.urlencoded({ extended: true }));
+
 app.use('/contact', contact)
-app.get('/',(req,res) =>{
+
+app.get('/', (req, res) => {
     res.send("App is running")
 })
+
 db.sequelize.sync()
     .then(() => {
         console.log("Database connected");
@@ -26,6 +31,7 @@ db.sequelize.sync()
     });
 
 const PORT = process.env.PORT || 3000;
+
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
 });
