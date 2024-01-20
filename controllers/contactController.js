@@ -2,11 +2,6 @@ const { Op } = require('sequelize');
 const db = require('../models');
 const contactDb = db.contacts;
 
-const addContact = async (req, res) => {
-    await contactDb.create(req.body)
-    res.status(200).send("Contact Created successfully!")
-}
-
 const handleErrors = (res, status, message) => {
     console.error(message);
     res.status(status).send({ error: message });
@@ -17,6 +12,28 @@ const getSequelizeOptions = (pageNumber, pageSize, whereCondition) => ({
     limit: parseInt(pageSize),
     offset: (parseInt(pageNumber) - 1) * parseInt(pageSize),
 });
+
+const sendSuccessResponse = (res, data, pageInfo) => {
+    res.status(200).send({
+        data,
+        pageInfo,
+    });
+};
+
+const sendSuccessMessage = (res, message) => {
+    res.status(200).send({
+        message,
+    });
+};
+
+const addContact = async (req, res) => {
+    try {
+        await contactDb.create(req.body);
+        sendSuccessMessage(res, 'Contact created successfully!');
+    } catch (err) {
+        handleErrors(res, 500, 'Internal Server Error');
+    }
+};
 
 const getAllContacts = async (req, res) => {
     try {
@@ -46,14 +63,11 @@ const getAllContacts = async (req, res) => {
 
         const totalPages = Math.ceil(totalContacts / parseInt(pageSize));
 
-        res.status(200).send({
-            data,
-            pageInfo: {
-                pageSize: parseInt(pageSize),
-                currentPage: parseInt(pageNumber),
-                totalContacts,
-                totalPages,
-            },
+        sendSuccessResponse(res, data, {
+            pageSize: parseInt(pageSize),
+            currentPage: parseInt(pageNumber),
+            totalContacts,
+            totalPages,
         });
     } catch (err) {
         handleErrors(res, 500, 'Internal Server Error');
@@ -61,23 +75,34 @@ const getAllContacts = async (req, res) => {
 };
 
 const updateContact = async (req, res) => {
-    const id = req.params.id
-    const updateContact = await contactDb.update(req.body, { where: { id } })
-    res.status(200).send(updateContact)
-}
+    try {
+        const id = req.params.id;
+        await contactDb.update(req.body, { where: { id } });
+        sendSuccessMessage(res, 'Contact updated successfully!');
+    } catch (err) {
+        handleErrors(res, 500, 'Internal Server Error');
+    }
+};
 
 const deleteContact = async (req, res) => {
-    console.log(req)
-    const id = req.params.id
-    await contactDb.destroy({ where: { id } })
-    res.status(200).send("Deleted successfully")
-}
+    try {
+        const id = req.params.id;
+        await contactDb.destroy({ where: { id } });
+        sendSuccessMessage(res, 'Contact deleted successfully!');
+    } catch (err) {
+        handleErrors(res, 500, 'Internal Server Error');
+    }
+};
 
 const getContact = async (req, res) => {
-    const id = req.params.id
-    const getAllContacts = await contactDb.findOne({ where: { id } })
-    res.status(200).send(getAllContacts)
-}
+    try {
+        const id = req.params.id;
+        const contact = await contactDb.findOne({ where: { id } });
+        sendSuccessResponse(res, contact, null);
+    } catch (err) {
+        handleErrors(res, 500, 'Internal Server Error');
+    }
+};
 
 module.exports = {
     addContact,
@@ -85,4 +110,4 @@ module.exports = {
     getAllContacts,
     deleteContact,
     updateContact,
-}
+};
