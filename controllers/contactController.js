@@ -27,17 +27,14 @@ const getAllContacts = async (req, res) => {
         whereCondition = {}
     }
     const offset = (pageNumber - 1) * pageSize;
-    const getContacts = await contactDb.findAll({
+    const data = await contactDb.findAll({
         where: whereCondition,
         limit: parseInt(pageSize),
         offset: parseInt(offset),
     }).catch((err) => {
         console.log(err)
     })
-    if (getContacts.length > 0) {
-        res.status(200).send(getContacts)
-    }
-    else res.status(400).send("Contact not found")
+    res.status(200).send(data);
 }
 
 const updateContact = async (req, res) => {
